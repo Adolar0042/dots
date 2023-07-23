@@ -14,13 +14,8 @@ if ( -NOT $thread_security_principal.IsInRole("Administrators") ) {
     exit 2
 }
 
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-Write-Host "Installing Git ..."
-winget install --id Git.Git -e --source winget
-# download a zip file from https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip
 Write-Host "Installing Cascadia Code Nerd Font ..."
 Invoke-WebRequest "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -OutFile "$($env:TEMP)\CascadiaCode.zip"
-# unzip and copy only font files to fonts folder
 Expand-Archive -Path "$($env:TEMP)\CascadiaCode.zip" -DestinationPath "$($env:TEMP)\CascadiaCode" -Force
 foreach ($file in Get-ChildItem -Path "$($env:TEMP)\CascadiaCode" -Filter "*.ttf") {
     Copy-Item -Path $file.FullName -Destination "$($env:windir)\Fonts" -Force
@@ -44,3 +39,6 @@ winget install --id Starship.Starship
 Write-Host "Configuring Starship ..."
 Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Adolar0042/dots/main/starship.toml" -OutFile "$($env:USERPROFILE)\.config\starship.toml"
 Write-Host "Note: You need to restart your terminal to see the changes."
+
+Write-Host "Installing Git ..."
+winget install --id Git.Git -e --source winget
